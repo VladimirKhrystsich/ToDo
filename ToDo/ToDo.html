@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="todo.css">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class='remaining'>
+            <span id="finished"></span>
+            <p>of</p><span id='all'></span>
+            <p> remaining</p>
+        </div>
+        <form action="" class="form-group">
+            <input type="text" class="form-control" id='task' placeholder='Enter task' autofocus>
+            <input type="submit" class="btn btn-primary" id='send' value='Send' onclick='writeTask(); event.preventDefault()'>
+            <input type="button" class='btn btn-primary' value='Clear' id='clear' onclick='clearForm()'>
+            <div id="task_field">
+            </div>
+        </form>
+
+    </div>
+    <script>
+        document.getElementById('all').innerHTML = '0';
+        document.getElementById('finished').innerHTML = '0';
+        
+        
+        function writeTask() {
+            var div = document.createElement('div');
+            i = document.querySelectorAll('div').length - 1;
+            div.id = 'task_' + i;
+            var p = document.createElement('p');
+            p.className = 'task_' + i;
+            var task_input = document.getElementById('task');
+            p.textContent = task_input.value;
+            var input = document.createElement('input');
+            input.className = 'task_' + i;
+            input.type = 'checkbox';
+            document.getElementById('task_field').appendChild(div);
+            document.getElementById('task_field').lastElementChild.appendChild(input);
+            document.getElementById('task_field').lastElementChild.appendChild(p);
+            task_input.value = '';
+            document.getElementById('all').innerHTML = document.getElementById('task_field').children.length;
+            document.getElementById('finished').innerHTML = document.getElementById('task_field').children.length - document.getElementsByClassName('done').length;
+        }
+        
+        
+        document.getElementById('task_field').addEventListener('change', crossOut);
+        
+        
+        function crossOut(e) {
+            var current = e.target;
+            var parents = current.parentElement;
+            if (parents.firstElementChild.checked) {
+                parents.lastElementChild.style.textDecoration = 'line-through';
+            } else {
+                parents.lastElementChild.style.textDecoration = 'none';
+            }
+            if (parents.firstElementChild.checked) {
+                parents.className = 'done';
+            } else {
+                parents.className = '';
+            }
+            document.getElementById('finished').innerHTML = document.getElementById('task_field').children.length - document.getElementsByClassName('done').length;
+        }
+        
+            
+        function clearForm() {
+            var doneTasks = document.getElementsByClassName('done');
+            for (i = doneTasks.length - 1; i >= 0; i--) {
+                doneTasks[i].remove();
+                document.getElementById('all').innerHTML = document.getElementById('task_field').children.length;
+            }
+        }
+    </script>
+</body>
+
+</html>
